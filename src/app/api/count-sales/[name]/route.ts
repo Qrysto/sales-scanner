@@ -1,7 +1,7 @@
 import { searchTiki } from '@/lib/sales';
 
 export async function GET(request: Request, params: { name: string }) {
-  const books = searchTiki(params.name);
+  const books = await searchTiki(params.name);
 
-  return new Response(JSON.stringify(books));
+  return Response.json(books);
 }
