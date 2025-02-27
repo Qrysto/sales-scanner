@@ -4,7 +4,7 @@ import SearchBox from './search';
 
 export default function Home() {
   return (
-    <main className="container mx-auto min-h-screen flex items-center justify-center">
+    <main>
       <div className="flex flex-col items-center my-8">
         <div className="my-6">
           <Image

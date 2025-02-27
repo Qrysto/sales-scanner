@@ -4,7 +4,7 @@ import {
   getSortedRowModel,
   createColumnHelper,
 } from '@tanstack/react-table';
-import Image from 'next/image';
+// import Image from 'next/image';
 import DataTable from '@/components/DataTable';
 import { Book } from '@/lib/types';
 
@@ -21,7 +21,7 @@ const columns = [
   ch.accessor('thumbnailUrl', {
     header: 'Ảnh',
     cell: ({ getValue, row }) => (
-      <Image src={getValue()} alt={row.original.name} />
+      <img src={getValue()} alt={row.original.name} width={140} height={140} />
     ),
   }),
   ch.accessor('name', {

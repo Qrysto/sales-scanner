@@ -6,16 +6,21 @@ export async function searchTiki(queryText: string) {
   let page = 1;
   let finished = false;
   do {
-    const res = await fetch(
-      'https://tiki.vn/api/v2/products' +
-        new URLSearchParams({
-          limit: String(limit),
-          page: String(page),
-          sort: 'top_seller',
-          q: queryText,
-        })
-    );
-    const data = await res.json();
+    const url =
+      'https://tiki.vn/api/v2/products?' +
+      new URLSearchParams({
+        limit: String(limit),
+        page: String(page),
+        sort: 'top_seller',
+        q: queryText,
+      });
+    const res = await fetch(url);
+    const { data } = await res.json();
+
+    if (!res.ok) {
+      throw data?.error || data;
+    }
+
     const matchedProducts = data.filter((product: TikiProduct) =>
       product.name.toLowerCase().includes(queryText.toLowerCase())
     );
