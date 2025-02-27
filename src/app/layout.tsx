@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Sales Checker',
+  title: 'ANA Sales Scanner',
 };
 
 export default function RootLayout({

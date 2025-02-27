@@ -11,7 +11,7 @@ export default function SearchBox() {
 
   return (
     <form
-      className="flex w-full max-w-sm items-center space-x-2"
+      className="flex items-center space-x-2"
       onSubmit={(e) => {
         e.preventDefault();
         const searchName = inputRef.current?.value;
@@ -20,7 +20,7 @@ export default function SearchBox() {
         }
       }}
     >
-      <Input placeholder="Tên sách" ref={inputRef} />
+      <Input placeholder="Tên sách" ref={inputRef} className="w-72" />
       <Button type="submit">Tìm kiếm</Button>
     </form>
   );
