@@ -1,6 +1,6 @@
 import { Book, TikiProduct } from './types';
 
-export async function searchTiki(name: string) {
+export async function searchTiki(queryText: string) {
   const limit = 40;
   const products: TikiProduct[] = [];
   let page = 1;
@@ -12,12 +12,12 @@ export async function searchTiki(name: string) {
           limit: String(limit),
           page: String(page),
           sort: 'top_seller',
-          q: name,
+          q: queryText,
         })
     );
     const data = await res.json();
     const matchedProducts = data.filter((product: TikiProduct) =>
-      product.name.toLowerCase().includes(name.toLowerCase())
+      product.name.toLowerCase().includes(queryText.toLowerCase())
     );
     products.push(...matchedProducts);
     finished = data.length < limit || matchedProducts.length === 0;
