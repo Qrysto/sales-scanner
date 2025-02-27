@@ -1,28 +1,22 @@
+'use client';
+
 import {
   getCoreRowModel,
   useReactTable,
   getSortedRowModel,
   createColumnHelper,
 } from '@tanstack/react-table';
-// import Image from 'next/image';
 import DataTable from '@/components/DataTable';
 import { Book } from '@/lib/types';
 
 const ch = createColumnHelper<Book>();
 const columns = [
-  ch.accessor('source', {
-    header: 'Nguồn',
-    cell: ({ getValue, row }) => (
-      <a href={row.original.url} target="_blank">
-        {getValue()}
-      </a>
-    ),
-  }),
   ch.accessor('thumbnailUrl', {
     header: 'Ảnh',
     cell: ({ getValue, row }) => (
-      <img src={getValue()} alt={row.original.name} width={140} height={140} />
+      <img src={getValue()} alt={row.original.name} className="w-20 h-20" />
     ),
+    enableSorting: false,
   }),
   ch.accessor('name', {
     header: 'Tên sản phẩm',
@@ -33,13 +27,27 @@ const columns = [
     cell: ({ getValue }) => getValue(),
   }),
   ch.accessor('sold', {
-    header: 'Số lượng đã bán',
-    cell: ({ getValue }) => getValue(),
+    header: 'Doanh số',
+    cell: ({ getValue }) => <div className="text-right">{getValue()}</div>,
+  }),
+  ch.accessor('source', {
+    header: 'Nguồn',
+    cell: ({ getValue, row }) => (
+      <a
+        href={row.original.url}
+        target="_blank"
+        className="hover:underline text-primary underline-offset-4"
+      >
+        {getValue()}
+      </a>
+    ),
+    enableSorting: false,
   }),
 ];
 
-export default function BookResults({
+export default function ScanResult({
   books = [],
+  isFetching,
 }: {
   books?: Book[];
   isFetching?: boolean;
@@ -61,7 +69,7 @@ export default function BookResults({
 
   return (
     <div>
-      <DataTable table={table} isFetching />
+      <DataTable table={table} isFetching={isFetching} />
     </div>
   );
 }
