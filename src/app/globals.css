@@ -4,55 +4,43 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 201 86% 17%; /* Deep blue background */
+    --foreground: 201 10% 93%; /* Light, soft foreground (light text) */
 
-    --foreground: 240 10% 3.9%;
+    --card: 201 40% 18%; /* Slightly darker blue for cards */
+    --card-foreground: 201 10% 95%; /* Light text for cards */
 
-    --card: 0 0% 100%;
+    --popover: 201 30% 24%; /* Muted blue for popovers */
+    --popover-foreground: 201 10% 92%; /* Light text for popovers */
 
-    --card-foreground: 240 10% 3.9%;
+    --primary: 201 85% 45%; /* Vibrant primary blue */
+    --primary-foreground: 201 10% 98%; /* Very light text for primary elements */
 
-    --popover: 0 0% 100%;
+    --secondary: 201 45% 35%; /* Slightly muted secondary blue */
+    --secondary-foreground: 201 10% 90%; /* Light text for secondary elements */
 
-    --popover-foreground: 240 10% 3.9%;
+    --muted: 201 15% 28%; /* Subtle darker blue for muted elements */
+    --muted-foreground: 201 10% 85%; /* Light text for muted elements */
 
-    --primary: 240 5.9% 10%;
+    --accent: 55 85% 47%; /* Warm yellow accent color */
+    --accent-foreground: 201 10% 95%; /* Light text for accent elements */
 
-    --primary-foreground: 0 0% 98%;
+    --destructive: 0 85% 45%; /* Red for destructive actions */
+    --destructive-foreground: 201 10% 98%; /* Light text for destructive actions */
 
-    --secondary: 240 4.8% 95.9%;
+    --border: 201 20% 40%; /* Slightly darker border color */
 
-    --secondary-foreground: 240 5.9% 10%;
+    --input: 201 50% 25%; /* Slightly muted input field background */
 
-    --muted: 240 4.8% 95.9%;
+    --ring: 201 70% 55%; /* Glowing ring effect (light blue) */
 
-    --muted-foreground: 240 3.8% 46.1%;
+    --chart-1: 215 85% 45%; /* Blue for chart 1 */
+    --chart-2: 145 85% 45%; /* Green for chart 2 */
+    --chart-3: 45 85% 45%; /* Warm yellow for chart 3 */
+    --chart-4: 0 85% 45%; /* Red for chart 4 */
+    --chart-5: 240 85% 45%; /* Purple for chart 5 */
 
-    --accent: 240 4.8% 95.9%;
-
-    --accent-foreground: 240 5.9% 10%;
-
-    --destructive: 0 84.2% 60.2%;
-
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 5.9% 90%;
-
-    --input: 240 5.9% 90%;
-
-    --ring: 240 10% 3.9%;
-
-    --chart-1: 12 76% 61%;
-
-    --chart-2: 173 58% 39%;
-
-    --chart-3: 197 37% 24%;
-
-    --chart-4: 43 74% 66%;
-
-    --chart-5: 27 87% 67%;
-
-    --radius: 0.5rem;
+    --radius: 0.8rem;
   }
   .dark {
     --background: 240 10% 3.9%;
