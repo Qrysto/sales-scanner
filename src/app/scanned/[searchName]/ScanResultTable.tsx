@@ -45,7 +45,7 @@ const columns = [
   }),
 ];
 
-export default function ScanResult({
+export default function ScanResultTable({
   books = [],
   isFetching,
 }: {

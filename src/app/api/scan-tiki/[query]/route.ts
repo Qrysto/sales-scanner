@@ -57,5 +57,5 @@ export async function GET(
     } as Book;
   });
 
-  return Response.json(books);
+  return Response.json({ results: books });
 }

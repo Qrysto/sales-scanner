@@ -2,8 +2,8 @@
 
 import { use } from 'react';
 import { useQuery } from 'react-query';
-import { Book } from '@/lib/types';
-import ScanResult from './ScanResult';
+import type { ScanResult } from '@/lib/types';
+import ScanResultTable from './ScanResultTable';
 
 export default function ScanResultPage({
   params,
@@ -12,13 +12,14 @@ export default function ScanResultPage({
 }) {
   const { searchName } = use(params);
   const decodedName = decodeURIComponent(searchName);
-  const { data: books, isFetching } = useQuery<Book[]>({
+  const { data, isFetching } = useQuery<ScanResult>({
     queryKey: ['scan', decodedName],
     queryFn: () =>
       fetch(`/api/scan-tiki/${decodedName}`).then((res) => res.json()),
     retry: false,
     staleTime: 3600000,
   });
+  const books = data?.results;
   const total = books?.reduce((sum, b) => sum + (b.sold || 0), 0) || 0;
 
   return (
@@ -31,7 +32,7 @@ export default function ScanResultPage({
         </div>
       </div>
 
-      <ScanResult books={books} isFetching={isFetching} />
+      <ScanResultTable books={books} isFetching={isFetching} />
     </div>
   );
 }

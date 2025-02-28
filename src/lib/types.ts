@@ -9,6 +9,11 @@ export interface Book {
   sold?: number;
 }
 
+export interface ScanResult {
+  results: Book[];
+  warnings?: object;
+}
+
 /**
  * TIKI
  * ============================================================================

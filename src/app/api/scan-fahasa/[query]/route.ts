@@ -120,5 +120,5 @@ export async function GET(
     });
   }
 
-  return Response.json(books);
+  return Response.json({ results: books });
 }
