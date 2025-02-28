@@ -1,6 +1,11 @@
-import { Book, TikiProduct } from './types';
+import { Book, TikiProduct } from '@/lib/types';
 
-export async function searchTiki(queryText: string) {
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ query: string }> }
+) {
+  const { query } = await params;
+
   const limit = 40;
   const products: TikiProduct[] = [];
   let page = 1;
@@ -12,17 +17,17 @@ export async function searchTiki(queryText: string) {
         limit: String(limit),
         page: String(page),
         sort: 'top_seller',
-        q: queryText,
+        q: query,
       });
     const res = await fetch(url);
-    const { data } = await res.json();
-
+    const resJson = await res.json();
     if (!res.ok) {
-      throw data?.error || data;
+      throw resJson?.error || resJson;
     }
 
+    const { data } = resJson;
     const matchedProducts = data.filter((product: TikiProduct) =>
-      product.name.toLowerCase().includes(queryText.toLowerCase())
+      product.name.toLowerCase().includes(query.toLowerCase())
     );
     products.push(...matchedProducts);
     finished = data.length < limit || matchedProducts.length === 0;
@@ -42,7 +47,7 @@ export async function searchTiki(queryText: string) {
     } = product;
     return {
       name,
-      id,
+      id: String(id),
       sku,
       source: 'Tiki',
       url: `https://tiki.vn/${url_path}`,
@@ -51,5 +56,6 @@ export async function searchTiki(queryText: string) {
       sold: amplitude.all_time_quantity_sold || quantity_sold?.value,
     } as Book;
   });
-  return books;
+
+  return Response.json(books);
 }

@@ -15,7 +15,7 @@ export default function ScanResultPage({
   const { data: books, isFetching } = useQuery<Book[]>({
     queryKey: ['scan', decodedName],
     queryFn: () =>
-      fetch(`/api/count-sales/${decodedName}`).then((res) => res.json()),
+      fetch(`/api/scan-tiki/${decodedName}`).then((res) => res.json()),
     retry: false,
     staleTime: 3600000,
   });

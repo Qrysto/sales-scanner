@@ -1,11 +1,11 @@
 export interface Book {
   name: string;
-  source: 'Tiki';
-  id: number;
-  sku: string;
+  source: 'Tiki' | 'Fahasa';
+  id: string;
+  sku?: string;
   url: string;
-  seller: string;
-  thumbnailUrl: string;
+  seller?: string;
+  thumbnailUrl?: string;
   sold?: number;
 }
 
@@ -162,4 +162,63 @@ export interface TikiAmplitudeInfo {
   joined_strategy_rerank: boolean;
   is_freeship_xtra: boolean;
   is_top_brand: boolean;
+}
+
+/**
+ * FAHASA
+ * ============================================================================
+ */
+
+export interface FahasaRawValue<T> {
+  raw: T | null;
+}
+
+export interface FahasaMetaData {
+  id: string;
+  engine: string;
+  score: number;
+}
+
+export interface FahasaProduct {
+  soon_release: FahasaRawValue<number>;
+  stock_status: FahasaRawValue<number>;
+  num_orders_month: FahasaRawValue<number>;
+  type_id: FahasaRawValue<string>;
+  sku: FahasaRawValue<string>;
+  link: FahasaRawValue<string>;
+  subscribes: FahasaRawValue<null>;
+  original_price: FahasaRawValue<number>;
+  price: FahasaRawValue<number>;
+  discount: FahasaRawValue<number>;
+  display_episode: FahasaRawValue<null>;
+  rating_summary: FahasaRawValue<number>;
+  episode: FahasaRawValue<null>;
+  series_id: FahasaRawValue<null>;
+  rating_count: FahasaRawValue<number>;
+  thumbnail: FahasaRawValue<string>;
+  title: FahasaRawValue<string>;
+  id: FahasaRawValue<string>;
+  _meta: FahasaMetaData;
+}
+
+export interface FahasaSearchMeta {
+  alerts: string[];
+  warnings: string[];
+  precision: number;
+  engine: {
+    name: string;
+    type: string;
+  };
+  page: {
+    current: number;
+    total_pages: number;
+    total_results: number;
+    size: number;
+  };
+  request_id: string;
+}
+
+export interface FahasaSearchResponse {
+  meta: FahasaSearchMeta;
+  results: FahasaProduct[];
 }
