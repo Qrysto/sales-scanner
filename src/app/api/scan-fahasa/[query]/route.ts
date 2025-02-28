@@ -1,5 +1,11 @@
 import { JSDOM } from 'jsdom';
-import { Book, FahasaProduct, FahasaSearchResponse } from '@/lib/types';
+import {
+  Book,
+  ScanResult,
+  FahasaProduct,
+  FahasaSearchResponse,
+  Warning,
+} from '@/lib/types';
 
 export async function GET(
   request: Request,
@@ -84,6 +90,7 @@ export async function GET(
 
   // Extract book info from HTML
   const books: Book[] = [];
+  const warnings: Warning[] = [];
   for (const product of products) {
     const url = `https://www.fahasa.com${product.link.raw}`;
     const res = await fetch(url);
@@ -99,15 +106,37 @@ export async function GET(
     const quantityEl = dom.window.document.querySelector(
       '.view-rate .product-view-qty-num'
     );
+    if (!quantityEl) {
+      warnings.push({
+        message: `quantityEl=${quantityEl}`,
+        data: { url, resText },
+      });
+    }
+
     const childNodes = quantityEl && Array.from(quantityEl.childNodes);
     const soldNode = childNodes?.find((node: any) => node.nodeName === '#text');
     const sold = parseInt(soldNode?.textContent || '');
-    if (typeof sold !== 'number') continue;
+    if (typeof sold !== 'number') {
+      if (quantityEl) {
+        warnings.push({
+          message: `sold=${sold}`,
+          data: { url, quantityEl: quantityEl.innerHTML },
+        });
+      }
+      continue;
+    }
 
     const sellerEl = dom.window.document.querySelector(
       '.product-view-sa_one .product-view-sa-supplier a'
     );
     const seller = sellerEl?.textContent || undefined;
+    if (!seller) {
+      warnings.push({
+        message: `seller=${seller}`,
+        data: { url, sellerEl: sellerEl?.innerHTML },
+      });
+    }
+
     books.push({
       name: product.title.raw || '',
       id: product.id.raw || '',
@@ -120,5 +149,7 @@ export async function GET(
     });
   }
 
-  return Response.json({ results: books });
+  const result: ScanResult = { results: books };
+  if (warnings.length) result.warnings = warnings;
+  return Response.json(result);
 }

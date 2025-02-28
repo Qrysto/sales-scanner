@@ -1,4 +1,4 @@
-import { Book, TikiProduct } from '@/lib/types';
+import { Book, ScanResult, TikiProduct, Warning } from '@/lib/types';
 
 export async function GET(
   request: Request,
@@ -34,6 +34,7 @@ export async function GET(
     page++;
   } while (!finished);
 
+  const warnings: Warning[] = [];
   const books = products.map((product) => {
     const {
       name,
@@ -45,6 +46,12 @@ export async function GET(
       quantity_sold,
       visible_impression_info: { amplitude },
     } = product;
+    if (amplitude.all_time_quantity_sold !== quantity_sold?.value) {
+      warnings.push({
+        message: `amplitude.all_time_quantity_sold !== quantity_sold?.value (${amplitude.all_time_quantity_sold} !== ${quantity_sold?.value})`,
+        data: { product },
+      });
+    }
     return {
       name,
       id: String(id),
@@ -57,5 +64,7 @@ export async function GET(
     } as Book;
   });
 
-  return Response.json({ results: books });
+  const result: ScanResult = { results: books };
+  if (warnings.length) result.warnings = warnings;
+  return Response.json(result);
 }

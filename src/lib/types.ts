@@ -9,9 +9,14 @@ export interface Book {
   sold?: number;
 }
 
+export interface Warning {
+  message: string;
+  data?: object;
+}
+
 export interface ScanResult {
   results: Book[];
-  warnings?: object;
+  warnings?: Warning[];
 }
 
 /**
