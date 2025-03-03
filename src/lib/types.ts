@@ -1,6 +1,8 @@
+export type Platform = 'Tiki' | 'Fahasa';
+
 export interface Book {
   name: string;
-  source: 'Tiki' | 'Fahasa';
+  source: Platform;
   id: string;
   sku?: string;
   url: string;

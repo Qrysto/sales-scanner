@@ -71,6 +71,7 @@ export async function GET(
       method: 'POST',
       headers: {
         Authorization: process.env.FAHASA_AUTH || '',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(params),
     });

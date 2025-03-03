@@ -1,8 +1,8 @@
 'use client';
 
 import { use } from 'react';
-import { useQuery } from 'react-query';
-import type { ScanResult } from '@/lib/types';
+import type { Book } from '@/lib/types';
+import { useScan } from '@/lib/scan';
 import ScanResultTable from './ScanResultTable';
 
 export default function ScanResultPage({
@@ -12,15 +12,16 @@ export default function ScanResultPage({
 }) {
   const { searchName } = use(params);
   const decodedName = decodeURIComponent(searchName);
-  const { data, isFetching } = useQuery<ScanResult>({
-    queryKey: ['scan', decodedName],
-    queryFn: () =>
-      fetch(`/api/scan-tiki/${decodedName}`).then((res) => res.json()),
-    retry: false,
-    staleTime: 3600000,
-  });
-  const books = data?.results;
+  const books: Book[] = [];
+
+  const tikiQuery = useScan('Tiki', decodedName);
+  if (tikiQuery.data) books.push(...tikiQuery.data.results);
+
+  const fahasaQuery = useScan('Fahasa', decodedName);
+  if (fahasaQuery.data) books.push(...fahasaQuery.data.results);
+
   const total = books?.reduce((sum, b) => sum + (b.sold || 0), 0) || 0;
+  const isFetching = tikiQuery.isFetching || fahasaQuery.isFetching;
 
   return (
     <div className="my-8">
