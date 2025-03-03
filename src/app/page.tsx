@@ -4,12 +4,10 @@ import SearchBox from './search';
 
 export default function Home() {
   return (
-    <main>
-      <div className="flex flex-col items-center my-8">
-        <Image src={logo} alt="Logo" width={350} />
+    <main className="flex flex-col min-h-screen items-center justify-center py-8">
+      <Image src={logo} alt="Logo" width={350} />
 
-        <SearchBox />
-      </div>
+      <SearchBox />
     </main>
   );
 }
