@@ -1,9 +1,35 @@
 'use client';
 
-import { use } from 'react';
+import { ReactNode, use } from 'react';
 import type { Book } from '@/lib/types';
 import { useScan } from '@/lib/scan';
+import { Badge } from '@/components/ui/badge';
+import { Spinner } from '@/components/ui/spinner';
 import ScanResultTable from './ScanResultTable';
+
+function PlatformChip({
+  label,
+  isFetching,
+  count,
+  selected,
+}: {
+  label: ReactNode;
+  isFetching: boolean;
+  count?: number;
+  selected?: boolean;
+}) {
+  return (
+    <div className="flex items-center">
+      <Badge
+        variant={selected ? 'default' : 'outline'}
+        className="space-x-2 text-sm cursor-pointer"
+      >
+        <span>{label}</span>
+        {isFetching ? <Spinner /> : <span className="font-bold">{count}</span>}
+      </Badge>
+    </div>
+  );
+}
 
 export default function ScanResultPage({
   params,
@@ -31,6 +57,25 @@ export default function ScanResultPage({
         <div>
           Tổng doanh số: <strong>{total}</strong>
         </div>
+      </div>
+
+      <div className="my-6 flex gap-3">
+        <PlatformChip
+          selected
+          label="Tất cả"
+          isFetching={isFetching}
+          count={total}
+        />
+        <PlatformChip
+          label="Tiki"
+          isFetching={tikiQuery.isFetching}
+          count={tikiQuery.data?.results.length}
+        />
+        <PlatformChip
+          label="Fahasa"
+          isFetching={fahasaQuery.isFetching}
+          count={fahasaQuery.data?.results.length}
+        />
       </div>
 
       <ScanResultTable books={books} isFetching={isFetching} />
