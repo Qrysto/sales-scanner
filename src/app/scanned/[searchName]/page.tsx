@@ -1,7 +1,8 @@
 'use client';
 
-import { ReactNode, use } from 'react';
-import type { Book, Warning } from '@/lib/types';
+import { use } from 'react';
+import { atom, useAtom, useAtomValue } from 'jotai';
+import type { Book, Platform, Warning } from '@/lib/types';
 import { useScan } from '@/lib/scan';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
@@ -21,7 +22,10 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import ScanResultTable from './ScanResultTable';
+
+const filterAtom = atom<Platform | null>(null);
 
 function WarningDialog({ data }: { data: object }) {
   const formattedJson = JSON.stringify(data, null, 2);
@@ -62,29 +66,35 @@ function WarningDialog({ data }: { data: object }) {
 }
 
 function PlatformChip({
-  label,
+  platform,
   isFetching,
   count,
-  selected,
   warnings,
 }: {
-  label: ReactNode;
+  platform: Platform | null;
   isFetching: boolean;
   count?: number;
-  selected?: boolean;
   warnings?: Warning[];
 }) {
+  const [filter, setFilter] = useAtom(filterAtom);
+  const selected = filter === platform;
   return (
     <div className="flex items-center">
       <Badge
         variant={selected ? 'default' : 'outline'}
-        className="space-x-2 text-sm cursor-pointer"
+        className={cn(
+          'space-x-2 text-sm cursor-pointer',
+          selected ? 'hover:bg-primary' : 'hover:bg-primary/10'
+        )}
+        onClick={() => {
+          setFilter(platform);
+        }}
       >
-        <span>{label}</span>
+        <span>{platform || 'Tất cả'}</span>
         {isFetching ? <Spinner /> : <span className="font-bold">{count}</span>}
       </Badge>
       {warnings && warnings.length > 0 && (
-        <WarningDialog data={{ platform: label, warnings }} />
+        <WarningDialog data={{ platform, warnings }} />
       )}
     </div>
   );
@@ -97,16 +107,24 @@ export default function ScanResultPage({
 }) {
   const { searchName } = use(params);
   const decodedName = decodeURIComponent(searchName);
-  const books: Book[] = [];
 
   const tikiQuery = useScan('Tiki', decodedName);
-  if (tikiQuery.data) books.push(...tikiQuery.data.results);
-
   const fahasaQuery = useScan('Fahasa', decodedName);
-  if (fahasaQuery.data) books.push(...fahasaQuery.data.results);
 
-  const total = books?.reduce((sum, b) => sum + (b.sold || 0), 0) || 0;
+  const filter = useAtomValue(filterAtom);
+  const books: Book[] = [];
+  if (tikiQuery.data && (filter === null || filter === 'Tiki')) {
+    books.push(...tikiQuery.data.results);
+  }
+  if (fahasaQuery.data && (filter === null || filter === 'Fahasa')) {
+    books.push(...fahasaQuery.data.results);
+  }
+
+  const totalSales = books?.reduce((sum, b) => sum + (b.sold || 0), 0) || 0;
   const isFetching = tikiQuery.isFetching || fahasaQuery.isFetching;
+  const booksCount =
+    (tikiQuery.data?.results.length || 0) +
+    (fahasaQuery.data?.results.length || 0);
 
   return (
     <div className="my-8">
@@ -114,25 +132,25 @@ export default function ScanResultPage({
         <div className="text-sm">Kết quả tìm kiếm</div>
         <h1 className="text-2xl mb-4 font-bold">{decodedName}</h1>
         <div>
-          Tổng doanh số: <strong>{total}</strong>
+          Tổng doanh số{filter !== null && ` (${filter})`}:{' '}
+          <strong>{totalSales}</strong>
         </div>
       </div>
 
       <div className="my-6 flex gap-4">
         <PlatformChip
-          selected
-          label="Tất cả"
+          platform={null}
           isFetching={isFetching}
-          count={total}
+          count={booksCount}
         />
         <PlatformChip
-          label="Tiki"
+          platform="Tiki"
           isFetching={tikiQuery.isFetching}
           count={tikiQuery.data?.results.length}
           warnings={tikiQuery.data?.warnings}
         />
         <PlatformChip
-          label="Fahasa"
+          platform="Fahasa"
           isFetching={fahasaQuery.isFetching}
           count={fahasaQuery.data?.results.length}
           warnings={fahasaQuery.data?.warnings}
