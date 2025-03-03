@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { Toaster } from '@/components/ui/sonner';
 import ClientWrapper from './ClientWrapper';
 import './globals.css';
 
@@ -30,6 +31,7 @@ export default function RootLayout({
         <div className="container mx-auto min-h-screen flex items-center justify-center">
           <ClientWrapper>{children}</ClientWrapper>
         </div>
+        <Toaster />
       </body>
     </html>
   );
