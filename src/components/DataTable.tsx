@@ -95,15 +95,16 @@ export default function DataTable<TData>({
               </TableCell>
             </TableRow>
           )}
-          {isFetching && (
-            <TableRow className="hover:bg-background">
-              {table.getVisibleLeafColumns().map((column) => (
-                <TableCell key={column.id}>
-                  <Skeleton className="w-full h-[20px]" />
-                </TableCell>
-              ))}
-            </TableRow>
-          )}
+          {isFetching &&
+            [1, 2, 3].map((i) => (
+              <TableRow className="hover:bg-background" key={i}>
+                {table.getVisibleLeafColumns().map((column) => (
+                  <TableCell key={column.id}>
+                    <Skeleton className="w-full h-[20px]" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
       <ScrollBar orientation="horizontal" />
