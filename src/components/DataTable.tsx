@@ -91,7 +91,7 @@ export default function DataTable<TData>({
                 colSpan={table.getVisibleLeafColumns().length}
                 className="h-24 text-center"
               >
-                Không tìm thấy kết quả nào.
+                Vườn không nhà trống...
               </TableCell>
             </TableRow>
           )}

@@ -20,11 +20,15 @@ const columns = [
   }),
   ch.accessor('name', {
     header: 'Tên sản phẩm',
-    cell: ({ getValue }) => getValue(),
+    cell: ({ getValue }) => (
+      <div className="whitespace-normal">{getValue()}</div>
+    ),
   }),
   ch.accessor('seller', {
     header: 'Người bán',
-    cell: ({ getValue }) => getValue(),
+    cell: ({ getValue }) => (
+      <div className="whitespace-normal">{getValue()}</div>
+    ),
   }),
   ch.accessor('sold', {
     header: 'Doanh số',
