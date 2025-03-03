@@ -7,6 +7,11 @@ import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
 import { TriangleAlert } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { DialogHeader } from '@/components/ui/dialog';
 import {
   Dialog,
@@ -23,7 +28,14 @@ function WarningDialog({ data }: { data: object }) {
   return (
     <Dialog>
       <DialogTrigger>
-        <TriangleAlert className="h-4 w-4 ml-1" />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <TriangleAlert className="h-4 w-4 ml-1" />
+          </TooltipTrigger>
+          <TooltipContent side="bottom" sideOffset={10}>
+            Click để mở
+          </TooltipContent>
+        </Tooltip>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
