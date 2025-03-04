@@ -115,7 +115,7 @@ export async function GET(
     }
 
     const childNodes = quantityEl && Array.from(quantityEl.childNodes);
-    const soldNode = childNodes?.find((node: any) => node.nodeName === '#text');
+    const soldNode = childNodes?.find((node) => node.nodeName === '#text');
     const sold = parseInt(soldNode?.textContent || '');
     if (typeof sold !== 'number') {
       if (quantityEl) {
