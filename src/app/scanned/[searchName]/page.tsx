@@ -2,12 +2,13 @@
 
 import { use } from 'react';
 import { atom, useAtom, useAtomValue } from 'jotai';
+import Link from 'next/link';
 import type { Book, Platform, Warning } from '@/lib/types';
 import { useScan } from '@/lib/scan';
 import { Badge } from '@/components/ui/badge';
 import { Spinner } from '@/components/ui/spinner';
 import { Button } from '@/components/ui/button';
-import { TriangleAlert } from 'lucide-react';
+import { TriangleAlert, ArrowLeft } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -129,7 +130,12 @@ export default function ScanResultPage({
   return (
     <div className="my-8">
       <div className="mb-4">
-        <div className="text-sm">Kết quả tìm kiếm</div>
+        <div className="text-sm flex items-center">
+          <Link href="/" className="mr-2">
+            <ArrowLeft className="w-4 h-4" />
+          </Link>
+          Kết quả tìm kiếm
+        </div>
         <h1 className="text-2xl font-bold">{decodedName}</h1>
       </div>
 
