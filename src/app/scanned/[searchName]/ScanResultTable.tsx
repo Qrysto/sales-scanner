@@ -1,10 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import {
   getCoreRowModel,
   useReactTable,
   getSortedRowModel,
   createColumnHelper,
+  SortingState,
+  RowSelectionState,
 } from '@tanstack/react-table';
 import DataTable from '@/components/DataTable';
 import { Book } from '@/lib/types';
@@ -56,19 +59,21 @@ export default function ScanResultTable({
   books?: Book[];
   isFetching?: boolean;
 }) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const table = useReactTable<Book>({
     data: books,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    // state: {
-    //   sorting,
-    //   columnVisibility,
-    //   rowSelection,
-    // },
-    // onSortingChange: setSorting,
+    state: {
+      sorting,
+      //   columnVisibility,
+      rowSelection,
+    },
+    onSortingChange: setSorting,
     // onColumnVisibilityChange: setColumnVisibility,
-    // onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: setRowSelection,
   });
 
   return (

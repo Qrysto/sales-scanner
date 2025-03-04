@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   flexRender,
   Table as TableType,
@@ -7,7 +8,6 @@ import {
   Header,
   Row,
   Cell,
-  SortingState,
 } from '@tanstack/react-table';
 import { ArrowUpDown, SortAsc, SortDesc } from 'lucide-react';
 import {
@@ -67,13 +67,7 @@ export default function DataTable<TData>({
       <Table className="border-separate border-spacing-0">
         <TableHeader className="sticky top-0 z-10 rounded-t-md flex-shrink-0 bg-background shadow-[0_0_2px_1px_hsl(var(--border))]">
           {table.getHeaderGroups().map((headerGroup) => (
-            <HeaderRow
-              key={headerGroup.id}
-              headerGroup={headerGroup}
-              sorting={
-                headerGroup.depth > 0 ? table.getState().sorting : undefined
-              }
-            />
+            <HeaderRow key={headerGroup.id} headerGroup={headerGroup} />
           ))}
         </TableHeader>
         <TableBody className="flex-1">
@@ -113,82 +107,49 @@ export default function DataTable<TData>({
 }
 
 const HeaderRow = genericMemo(
-  <TData,>({
-    headerGroup,
-  }: {
-    headerGroup: HeaderGroup<TData>;
-    // Pass sorting state so that HeaderRow gets rerendered when sorting changes
-    sorting?: SortingState;
-  }) => (
+  <TData,>({ headerGroup }: { headerGroup: HeaderGroup<TData> }) => (
     <TableRow className="hover:bg-background">
       {headerGroup.headers.map((header) => (
-        <HeaderCell
-          key={header.id}
-          header={header}
-          sorted={header.column.getIsSorted()}
-        />
+        <HeaderCell key={header.id} header={header} />
       ))}
     </TableRow>
   )
 );
 
 const HeaderCell = genericMemo(
-  <TData,>({
-    header,
-    sorted,
-  }: {
-    header: Header<TData, unknown>;
-    sorted: false | 'asc' | 'desc';
-  }) => {
-    // Don't render these leaf header cells because they are already rendered by their parents
-    const columnRelativeDepth = header.depth - header.column.depth;
-    if (
-      !header.isPlaceholder &&
-      columnRelativeDepth > 1 &&
-      header.id === header.column.id
-    ) {
-      return null;
-    }
-
-    // Render the leaf header instead of middle placeholders so header names are correctly displayed
-    let headerToRender = header;
-    let rowSpan = 1;
-    while (
-      headerToRender.isPlaceholder &&
-      headerToRender.subHeaders.length === 1
-    ) {
-      headerToRender = headerToRender.subHeaders[0];
-      rowSpan++;
-    }
-
-    const sortable = headerToRender.column.getCanSort();
+  <TData,>({ header }: { header: Header<TData, unknown> }) => {
+    const sortable = header.column.getCanSort();
+    const sorted = header.column.getIsSorted();
+    // for programmatical re-rendering
+    const [counter, setCounter] = useState(0);
     return (
       <TableHead
-        colSpan={headerToRender.colSpan}
-        rowSpan={rowSpan}
+        colSpan={header.colSpan}
         className={cn(
           'font-bold whitespace-nowrap group border border-border/50',
-          headerToRender.colSpan > 1 && 'text-center',
+          header.colSpan > 1 && 'text-center',
           sortable && 'cursor-pointer'
         )}
         onClick={
           sortable
             ? () => {
+                const sorted = header.column.getIsSorted();
+                // asc -> false
                 if (sorted === 'asc') {
-                  headerToRender.column.clearSorting();
+                  header.column.clearSorting();
                 } else {
-                  headerToRender.column.toggleSorting(sorted !== 'desc');
+                  // false -> desc
+                  // desc -> asc
+                  header.column.toggleSorting(sorted !== 'desc');
                 }
+                setCounter(counter + 1);
               }
             : undefined
         }
       >
-        {headerToRender.isPlaceholder
+        {header.isPlaceholder
           ? null
-          : flexRender(
-              headerToRender.column.columnDef.header,
-              headerToRender.getContext()
-            )}
+          : flexRender(header.column.columnDef.header, header.getContext())}
         {sortable && sorted === false && (
           <ArrowUpDown className="inline-block ml-2 h-4 w-4 opacity-20 group-hover:opacity-40" />
         )}
