@@ -46,12 +46,6 @@ export async function GET(
       quantity_sold,
       visible_impression_info: { amplitude },
     } = product;
-    if (amplitude.all_time_quantity_sold !== quantity_sold?.value) {
-      warnings.push({
-        message: `amplitude.all_time_quantity_sold !== quantity_sold?.value (${amplitude.all_time_quantity_sold} !== ${quantity_sold?.value})`,
-        data: { product },
-      });
-    }
     return {
       name,
       id: String(id),
@@ -60,7 +54,10 @@ export async function GET(
       url: `https://tiki.vn/${url_path}`,
       seller: seller_name,
       thumbnailUrl: thumbnail_url,
-      sold: amplitude.all_time_quantity_sold || quantity_sold?.value,
+      sold:
+        typeof amplitude.all_time_quantity_sold === 'number'
+          ? amplitude.all_time_quantity_sold
+          : quantity_sold?.value,
     } as Book;
   });
 
