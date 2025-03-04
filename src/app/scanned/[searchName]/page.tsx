@@ -128,33 +128,36 @@ export default function ScanResultPage({
 
   return (
     <div className="my-8">
-      <div className="mb-8">
+      <div className="mb-4">
         <div className="text-sm">Kết quả tìm kiếm</div>
-        <h1 className="text-2xl mb-4 font-bold">{decodedName}</h1>
+        <h1 className="text-2xl font-bold">{decodedName}</h1>
+      </div>
+
+      <div className="flex justify-between items-center">
+        <div className="my-6 flex gap-4">
+          <PlatformChip
+            platform={null}
+            isFetching={isFetching}
+            count={booksCount}
+          />
+          <PlatformChip
+            platform="Tiki"
+            isFetching={tikiQuery.isFetching}
+            count={tikiQuery.data?.results.length}
+            warnings={tikiQuery.data?.warnings}
+          />
+          <PlatformChip
+            platform="Fahasa"
+            isFetching={fahasaQuery.isFetching}
+            count={fahasaQuery.data?.results.length}
+            warnings={fahasaQuery.data?.warnings}
+          />
+        </div>
+
         <div>
           Tổng doanh số{filter !== null && ` (${filter})`}:{' '}
           <strong>{totalSales}</strong>
         </div>
-      </div>
-
-      <div className="my-6 flex gap-4">
-        <PlatformChip
-          platform={null}
-          isFetching={isFetching}
-          count={booksCount}
-        />
-        <PlatformChip
-          platform="Tiki"
-          isFetching={tikiQuery.isFetching}
-          count={tikiQuery.data?.results.length}
-          warnings={tikiQuery.data?.warnings}
-        />
-        <PlatformChip
-          platform="Fahasa"
-          isFetching={fahasaQuery.isFetching}
-          count={fahasaQuery.data?.results.length}
-          warnings={fahasaQuery.data?.warnings}
-        />
       </div>
 
       <ScanResultTable books={books} isFetching={isFetching} />

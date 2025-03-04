@@ -33,10 +33,6 @@ const columns = [
       <div className="whitespace-normal">{getValue()}</div>
     ),
   }),
-  ch.accessor('sold', {
-    header: 'Doanh số',
-    cell: ({ getValue }) => <div className="text-right">{getValue()}</div>,
-  }),
   ch.accessor('source', {
     header: 'Nguồn',
     cell: ({ getValue, row }) => (
@@ -49,6 +45,10 @@ const columns = [
       </a>
     ),
     enableSorting: false,
+  }),
+  ch.accessor('sold', {
+    header: 'Doanh số',
+    cell: ({ getValue }) => <div className="text-right">{getValue()}</div>,
   }),
 ];
 
